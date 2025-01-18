@@ -1,5 +1,5 @@
 const Booking = require("../models/Booking");
-const bookingSchema = require("../utils/validators");
+const { bookingSchema } = require("../utils/validators");
 
 exports.createBooking = async (req, res) => {
   try {
@@ -28,19 +28,26 @@ exports.getBookings = async (req, res) => {
     const { date, vendor } = req.query;
     const filters = {};
 
+    // Filter by date if provided
     if (date) {
       filters.booking_date = {
         $gte: new Date(date),
         $lt: new Date(new Date(date).setDate(new Date(date).getDate() + 1)),
       };
     }
+
+    // Filter by vendor name if provided
     if (vendor) {
-      filters.vendor_details = new RegExp(vendor, "i");
+      filters["vendor_details.vendor_name"] = new RegExp(vendor, "i"); // Ensure correct path for the vendor field
     }
 
+    // Query the bookings with filters
     const bookings = await Booking.find(filters);
+
+    // Return the matching bookings
     res.status(200).json(bookings);
   } catch (err) {
+    console.error(err); // Log the error for debugging
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
