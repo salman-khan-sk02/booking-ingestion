@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const routes = require("./src/routes");
+const routes = require("./src/routes/index");
 const connectToDatabase = require("./src/config/database");
 
 // Load environment variables
