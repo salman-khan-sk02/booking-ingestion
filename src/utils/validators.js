@@ -5,15 +5,13 @@ const vendorDetailsSchema = Joi.object({
   vendor_id: Joi.string().required(),
   contact: Joi.string(),
   address: Joi.string(),
-  // Any other vendor-specific fields can be added here
 });
 
 const bookingSchema = Joi.object({
-  booking_id: Joi.string().required(),
   customer_name: Joi.string().required(),
   booking_date: Joi.date().required(),
   amount: Joi.number().required(),
-  vendor_details: vendorDetailsSchema.required(), // Updated to handle vendor details object
+  vendor_details: vendorDetailsSchema.required(),
 });
 
-module.exports = { bookingSchema };
+module.exports = { bookingSchema }; // Exporting the object containing bookingSchema
