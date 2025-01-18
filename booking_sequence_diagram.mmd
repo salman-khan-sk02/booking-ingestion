@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant U as User
+    participant API as API Gateway
+    participant Auth as Authentication Service
+    participant Book as Booking Service
+    participant DB as Database
+
+    U->>API: POST /auth/register (username, password)
+    API->>Auth: Register user
+    Auth->>DB: Store user data (username, password)
+    DB-->>Auth: User saved
+    Auth-->>API: Registration successful
+    API-->>U: 201 Created (User registered)
+
+    U->>API: POST /auth/login (username, password)
+    API->>Auth: Validate credentials
+    Auth->>DB: Check user data (username, password)
+    DB-->>Auth: User found
+    Auth-->>API: Generate JWT token
+    API-->>U: 200 OK (JWT token)
+
+    U->>API: POST /bookings (booking data, Authorization: Bearer token)
+    API->>Book: Validate JWT token
+    Book->>DB: Store booking data
+    DB-->>Book: Booking saved
+    Book-->>API: Booking created
+    API-->>U: 201 Created (Booking saved)
+
+    U->>API: GET /bookings (filters)
+    API->>Book: Fetch bookings (optional filters)
+    Book->>DB: Retrieve booking data (filters)
+    DB-->>Book: Return matching bookings
+    Book-->>API: Return bookings data
+    API-->>U: 200 OK (List of bookings)
+
+    U->>API: DELETE /bookings/{id} (Authorization: Bearer token)
+    API->>Book: Validate JWT token and check booking ID
+    Book->>DB: Delete booking by ID
+    DB-->>Book: Booking deleted
+    Book-->>API: Booking deleted
+    API-->>U: 200 OK (Booking deleted)
